@@ -1,12 +1,12 @@
-package org.example;
+package org.example.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.models.UrlModel;
+import org.example.repo.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
-import java.util.Optional;
-import java.util.Random;
 
 @Service
 @Slf4j
@@ -20,7 +20,7 @@ public class UrlService {
 //    provide url connection.
 
 
-//    1. save url
+    //    1. save url
     public String saveUrl(String url)
     {
         boolean sign = u_repo.existsByUrl(url);
@@ -41,7 +41,7 @@ public class UrlService {
         }
     }
 
-//    2. provide url connection.
+    //    2. provide url connection.
     public String provideUrl(String code)
     {
         boolean sign = u_repo.existsBySmallHashCode(code);

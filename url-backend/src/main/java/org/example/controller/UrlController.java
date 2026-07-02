@@ -1,23 +1,23 @@
-package org.example;
+package org.example.controller;
 
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.services.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.view.RedirectView;
-
 import java.util.Map;
+
 
 @RequestMapping("/api")
 @RestController
 public class UrlController {
-
     @Autowired
     private UrlService u_service;
 
-//  get the url  * checking the db whether it exist or not.
+    //  get the url  * checking the db whether it exist or not.
     @PostMapping("/add")
     public String addUrl(@RequestBody Map<String,String> obj)  // map ki jagah dto bhi use kr sakte , best approach.:3
     {
@@ -25,11 +25,11 @@ public class UrlController {
         if(s.startsWith("Success"))
         {
 //            return "ur small url :"+s.substring(7,s.length());  // for backend i return this
-             return s.substring(7);
+            return s.substring(7);
         }
         else {
 //            return "url Already Existed before in Db:"+s;    //for backend i return this.
-              return s;
+            return s;
         }
     }
 

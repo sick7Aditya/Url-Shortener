@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { PostMapping } from "./axios.js";
-
+import Navbar from "../More/Navbar.jsx";
+// import About from "../More/About.jsx";
+import { Link } from "react-router-dom";
 
 function OneAndOnlyPage() {
   const [url , setUrl] =useState("");
@@ -11,7 +13,6 @@ function OneAndOnlyPage() {
 
     console.log(url);
     const r=await PostMapping(url);
-    // document.getElementById("a").textContent = r.data;
     setDisplay("http://localhost:8080/api/show/"+r.data);
     console.log(r);
     console.log("http://localhost:8080/api/show/"+r.data);
@@ -25,14 +26,16 @@ function OneAndOnlyPage() {
   }
   
   return (
+<>
+<Navbar/>
     <div
-      style={{
-        minHeight: "100vh",
-        background: "#f4f6f8",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+    style={{
+      minHeight: "100vh",
+      background: "#f4f6f8",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
     >
       <div
         style={{
@@ -43,13 +46,14 @@ function OneAndOnlyPage() {
           boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
           textAlign: "center",
         }}
-      >
+        >
+        <marquee>Url get Delete after 5hrs. Check <Link to="/About">About</Link> Section for more.</marquee>
         <h1 style={{ color: "#333" }}>URL Shortener</h1>
 
         <p style={{ color: "#666", marginBottom: "30px" }}>
           Welcome Master.
           <br />
-          Myself: Yan Diomande (Future Baller).
+          mijikai(short) your URL
         </p>
         <form >
 
@@ -79,7 +83,7 @@ function OneAndOnlyPage() {
             fontSize: "16px",
             cursor: "pointer",
           }}
-
+          
           onClick={addUrl}
           >
           Generate Short URL
@@ -93,23 +97,24 @@ function OneAndOnlyPage() {
             background: "#f8f9fa",
             borderRadius: "8px",
           }}
-        >
+          >
           <strong>Shortened URL</strong>
 
           {displayNewUrl ? (
-        <a
-                  href={displayNewUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-              >
+            <a
+            href={displayNewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            >
                   {displayNewUrl}
               </a>
           ) : (
-              <p>Small-Url will appear here.</p>
+            <p>Small-Url will appear here.</p>
           )}
         </div>
       </div>
     </div>
+</>
   );
 }
 
