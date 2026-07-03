@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { PostMapping } from "./axios.js";
 import Navbar from "../More/Navbar.jsx";
-// import About from "../More/About.jsx";
 import { Link } from "react-router-dom";
 
 function OneAndOnlyPage() {
@@ -13,8 +12,18 @@ function OneAndOnlyPage() {
 
     console.log(url);
     const r=await PostMapping(url);
-    setDisplay("http://localhost:8080/api/show/"+r.data);
-    console.log(r);
+    if(r.data.startsWith("Limit"))
+    {
+      setDisplay("<br>Noti boy only 5 urls can be produce one single user.");
+    }
+    else if(r.data.startsWith("Wrong"))
+    {
+      setDisplay("<br>Wrong Credential Error !! Suggested to Login again.");
+    }
+    else
+    {
+      setDisplay("http://localhost:8080/api/show/"+r.data);
+    }
     console.log("http://localhost:8080/api/show/"+r.data);
   }
   function changeEvent(e)

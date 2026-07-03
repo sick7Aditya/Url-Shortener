@@ -1,10 +1,7 @@
 package org.example.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -12,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 public class OtpVerify {
 
+    @ToString.Exclude
     private String otp;
-    private String email,name,pwd;
+    private String email,name;
+    @ToString.Exclude
+    String pwd;
 }

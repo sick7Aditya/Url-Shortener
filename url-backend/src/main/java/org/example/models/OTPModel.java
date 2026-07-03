@@ -1,10 +1,7 @@
 package org.example.models;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,9 +19,10 @@ public class OTPModel {
     private String id;
     private String email ,pwd, name;
 
+    @ToString.Exclude
     private String otp;
 
-    @Indexed(expireAfterSeconds = 0)
+    @Indexed(expireAfter = "2m")
     private Date expiresAt;
 
 }

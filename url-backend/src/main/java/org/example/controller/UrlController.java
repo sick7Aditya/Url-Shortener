@@ -2,26 +2,38 @@ package org.example.controller;
 
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.example.dto.AllUrlRequest;
+import org.example.dto.UrlData;
+import org.example.models.UrlModel;
 import org.example.services.UrlService;
+import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.List;
 import java.util.Map;
 
 
 @RequestMapping("/api")
 @RestController
+@Slf4j
 public class UrlController {
     @Autowired
     private UrlService u_service;
 
+
+    @Autowired
+    private UserService us;
     //  get the url  * checking the db whether it exist or not.
     @PostMapping("/add")
-    public String addUrl(@RequestBody Map<String,String> obj)  // map ki jagah dto bhi use kr sakte , best approach.:3
+    public String addUrl(@RequestBody UrlData ud)  // dto ki jagah map bhi use kr sakte , best approach dto he hai.:3
     {
-        String s = u_service.saveUrl(obj.get("url"));
+        String s = u_service.saveUrl(ud);
         if(s.startsWith("Success"))
         {
 //            return "ur small url :"+s.substring(7,s.length());  // for backend i return this
@@ -45,5 +57,13 @@ public class UrlController {
         }
 
         return new RedirectView(url);
+    }
+
+
+    @GetMapping("/allUrls")
+    public List<UrlModel> providingUserAllUrls(Authentication auth)
+    {
+        log.info("User is asking for thw url");
+        return us.provideAllUserUrls(auth.getName());
     }
 }

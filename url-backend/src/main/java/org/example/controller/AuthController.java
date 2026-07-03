@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.example.dto.LoginTimeDTO;
 import org.example.dto.OtpVerify;
 import org.example.dto.Signup;
@@ -7,9 +8,16 @@ import org.example.email.MailService;
 import org.example.services.OtpGenerator;
 import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,7 +34,7 @@ public class AuthController {
 
 //     for Login->check Password == db ka password :
     @PostMapping("/Login")
-    public String getLogin(@RequestBody LoginTimeDTO lt)
+    public String getLogin(@RequestBody LoginTimeDTO lt , HttpServletRequest req)
     {
         String s = us.Login(lt);
         if(s.equals("no_mail"))
@@ -36,6 +44,20 @@ public class AuthController {
         else {
             if(s.equals("Success"))
             {
+                // bhaynakar security -> creating an session because koi bhi non user saare url's dekh sakte db ke of any user(no protection) ,
+
+//               storing user in a session (>,<)
+                Authentication auth = new UsernamePasswordAuthenticationToken(
+                        lt.getEmail(), null, List.of(new SimpleGrantedAuthority("USER"))
+                );
+//               step 2 :
+                SecurityContext context = SecurityContextHolder.createEmptyContext();
+                context.setAuthentication(auth);
+                SecurityContextHolder.setContext(context);
+
+                req.getSession(true).setAttribute(
+                        HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context
+                );
                 return "gtg";
             }
             else {

@@ -23,7 +23,7 @@ public class OtpGenerator {
 
     public String returnOTP(String email)
     {
-        log.info("The OTP is found & handing it to userService");
+        log.info("The OTP is being searched & in both case -> handing it to userService");
         String v = (orepo.existsByEmail(email))?orepo.findByEmail(email).getOtp() : "-1";
         return v;
     }
@@ -40,7 +40,7 @@ public class OtpGenerator {
             o.setEmail(su.getEmail());
             o.setName(su.getName());
             o.setPwd(su.getPwd());
-            o.setExpiresAt(new Date(System.currentTimeMillis() + 60*1000));
+            o.setExpiresAt(new Date());
             orepo.save(o);
             log.info("OTP saved in db :"+otp);
             return true;

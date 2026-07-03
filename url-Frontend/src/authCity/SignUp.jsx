@@ -49,8 +49,9 @@ function SignUp() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
       });
+      const msg = await res.text();
 
-      if (res.ok) {
+      if (msg=="success") {
         alert("Account created successfully!");
         navigate("/");
       } else {

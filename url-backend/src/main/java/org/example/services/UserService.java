@@ -1,17 +1,23 @@
 package org.example.services;
 
 
-import org.example.dto.LoginTimeDTO;
-import org.example.dto.OtpVerify;
-import org.example.dto.Signup;
+import org.example.dto.*;
 import org.example.models.OTPModel;
+import org.example.models.UrlModel;
 import org.example.models.UserModel;
 import org.example.repo.OtpRepo;
+import org.example.repo.UrlRepository;
 import org.example.repo.UserModelRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -26,10 +32,15 @@ public class UserService {
     @Autowired
     private OtpRepo orepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;   // claude na bohot gaali di warne mai toh plain text use kr rahe tha :3.
+
+    @Autowired
+    private UrlRepository url_repo;
 //    correct waale Login finally (TvT).
     public String Login(LoginTimeDTO lt)
     {
-        log.info("Checking if this nig in the db");
+        log.info("Checking if this guy in the db");
         UserModel u = urepo.findByEmail(lt.getEmail());
         if(u == null)
         {
@@ -37,31 +48,16 @@ public class UserService {
             return "no_mail";
         }
         else {
-            if(u.getPwd().equals(lt.getPwd()))
+            if(passwordEncoder.matches(lt.getPwd() , u.getPwd()))
             {
-                log.info("Nig the Password Matches.");
+                log.info("The Password Matches. ,isko abhi bhi password yaad hai 🥀.");
                 return "Success";
             }
             else {
-                log.info("Bro who the hell u tryne to be.");
+                log.info("HAHAHA !!!! finally koi bande aaya jo password bhul gya.");
                 return "failure";
             }
         }
-    }
-    
-
-    public boolean verifyLimit(String email)
-    {
-        UserModel u=urepo.findByEmail(email);
-        if(u.getLimit() > 0)
-        {
-            u.setLimit(u.getLimit()-1);
-            urepo.save(u);
-            log.info("okay Limit decreases for u :"+u.getLimit());
-            return true;
-        }
-        log.info("user has its limit , contact owner to get more space.");
-        return false;
     }
 
     public boolean ClickedSignUpButton(Signup su)
@@ -99,7 +95,7 @@ public class UserService {
                 UserModel u = new UserModel();
                 u.setEmail(o.getEmail());
                 u.setName(o.getName());
-                u.setPwd(o.getPwd());
+                u.setPwd(passwordEncoder.encode(ov.getPwd()));
                 u.setLimit(5);
                 urepo.save(u);
                 orepo.deleteByEmail(ov.getEmail());
@@ -112,6 +108,28 @@ public class UserService {
                 return false;
             }
         }
+    }
+
+
+    public List<UrlModel> provideAllUserUrls(String email)
+    {
+//        if(urepo.existsByEmail(au.getEmail()))
+//        {
+//            return url_repo.findAllById(urepo.findByEmail(au.getEmail()).getUserUrls());
+//        }
+//        else
+//        {
+//            return new ArrayList<UrlModel>();
+//        }
+
+//      this one is more db efficient.
+        UserModel user = urepo.findByEmail(email);
+
+        if (user == null) {
+            return new ArrayList<>();
+        }
+
+        return url_repo.findAllById(user.getUserUrls());
     }
 
 

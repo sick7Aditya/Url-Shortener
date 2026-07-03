@@ -1,92 +1,89 @@
-import React, { useEffect, useState } from 'react'
-import Navbar from './Navbar'
+import React, { useEffect, useState } from 'react';
+import Navbar from './Navbar';
+import { MyAllUrls } from '../component/axios';
 
 function Profile() {
-  const [urls, setUrls] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    fetchUrls()
-  }, [])
+  const [urls, setUrls] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   async function fetchUrls() {
     try {
-      const token = localStorage.getItem('token')
-
-      const res = await fetch('http://localhost:8080/api/urls/myurls', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (!res.ok) {
-        throw new Error('Failed to fetch URLs')
-      }
-
-      const data = await res.json()
-      setUrls(data)
+      const r = await MyAllUrls();
+      console.log(r.data); // Checking what the backend returns
+      setUrls(r.data);
     } catch (err) {
-      setError(err.message)
+      console.error(err);
+      setError('Failed to fetch URLs');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
+  useEffect(() => {
+    fetchUrls();
+  }, []);
+
   function copyToClipboard(shortUrl) {
-    navigator.clipboard.writeText(shortUrl)
-    alert('Copied to clipboard!')
+    navigator.clipboard.writeText(shortUrl);
+    // alert('Copied to clipboard!');
   }
 
   return (
     <div style={styles.container}>
-        <div>
-            <Navbar></Navbar>
-        </div>
+      <Navbar />
+
       <h1 style={styles.heading}>Your URLs</h1>
 
       {loading && <p style={styles.message}>Loading...</p>}
 
-      {error && <p style={styles.errorMessage}>{error}</p>}
+      {!loading && error && (
+        <p style={styles.errorMessage}>{error}</p>
+      )}
 
       {!loading && !error && urls.length === 0 && (
         <p style={styles.message}>You haven't created any URLs yet.</p>
       )}
 
-      <div style={styles.list}>
-        {urls.map((url) => (
-          <div key={url._id || url.id} style={styles.card}>
-            <p style={styles.label}>
-              Original:
-              <span style={styles.originalUrl}> {url.originalUrl}</span>
-            </p>
-            <p style={styles.label}>
-              Short:
-              <a
-                href={url.shortUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={styles.shortUrl}
-              >
-                {' '}{url.shortUrl}
-              </a>
-            </p>
-            <div style={styles.footer}>
-              <span style={styles.expiry}>
-                Expires: {new Date(url.expiresAt).toLocaleString()}
-              </span>
-              <button
-                style={styles.copyBtn}
-                onClick={() => copyToClipboard(url.shortUrl)}
-              >
-                Copy
-              </button>
+      {!loading && !error && (
+        <div style={styles.list}>
+          {urls.map((url) => (
+            <div key={url.id || url._id} style={styles.card}>
+              <p style={styles.label}>
+                Original:
+                <span style={styles.originalUrl}> {url.url}</span>
+              </p>
+
+              <p style={styles.label}>
+                Short:
+                <a
+                  href={`http://localhost:8080/api/show/${url.smallHashCode}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={styles.shortUrl}
+                >
+                  {`http://localhost:8080/api/show/${url.smallHashCode}`}
+                </a>
+              </p>
+
+              <div style={styles.footer}>
+                <span style={styles.expiry}>
+                  Expires: {new Date(url.expireAt).toLocaleString()}
+                </span>
+
+                <button
+                  style={styles.copyBtn}
+                  onClick={() => copyToClipboard(`http://localhost:8080/api/show/${url.smallHashCode}`)}
+                >
+                  Copy
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
 const styles = {
@@ -160,6 +157,6 @@ const styles = {
     fontSize: '0.8rem',
     cursor: 'pointer',
   },
-}
+};
 
-export default Profile
+export default Profile;
