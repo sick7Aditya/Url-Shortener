@@ -37,6 +37,9 @@ build/
 ### Mac OS ###
 .DS_Store
 
-real_prop
+real_props
 ### real prop mai application.properties hai :3 ###
 application-local.properties
+
+
+**/real_props
