@@ -57,12 +57,12 @@ function Profile() {
               <p style={styles.label}>
                 Short:
                 <a
-                  href={`http://localhost:8080/api/show/${url.smallHashCode}`}
+                  href={`https://url-shortener-server-h5gn.onrender.com/api/show/${url.smallHashCode}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={styles.shortUrl}
                 >
-                  {`http://localhost:8080/api/show/${url.smallHashCode}`}
+                  {`https://url-shortener-server-h5gn.onrender.com/api/show/${url.smallHashCode}`}
                 </a>
               </p>
 
@@ -73,7 +73,7 @@ function Profile() {
 
                 <button
                   style={styles.copyBtn}
-                  onClick={() => copyToClipboard(`http://localhost:8080/api/show/${url.smallHashCode}`)}
+                  onClick={() => copyToClipboard(`https://url-shortener-server-h5gn.onrender.com/api/show/${url.smallHashCode}`)}
                 >
                   Copy
                 </button>

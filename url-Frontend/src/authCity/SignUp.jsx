@@ -19,7 +19,7 @@ function SignUp() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:8080/api/SignUp", {
+      const res = await fetch("https://url-shortener-server-h5gn.onrender.com/api/SignUp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, pwd, email }),
@@ -44,7 +44,7 @@ function SignUp() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:8080/api/Otp", {
+      const res = await fetch("https://url-shortener-server-h5gn.onrender.com/api/Otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),

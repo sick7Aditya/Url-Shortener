@@ -23,7 +23,7 @@ function Login() {
     console.log("Email:", email);
     console.log("Password:", pwd);
 
-    const r = await fetch("http://localhost:8080/api/Login", {
+    const r = await fetch("https://url-shortener-server-h5gn.onrender.com/api/Login", {
     method: "POST",
     credentials: "include",  // credential - bohot lambi kahani hai.
     headers: {

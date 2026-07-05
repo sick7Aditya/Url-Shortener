@@ -9,7 +9,7 @@ function OneAndOnlyPage() {
   async function addUrl(e)
   {
     e.preventDefault();
-
+    setDisplay("");
     console.log(url);
     const r=await PostMapping(url);
     if(r.data.startsWith("Limit"))
@@ -22,9 +22,9 @@ function OneAndOnlyPage() {
     }
     else
     {
-      setDisplay("http://localhost:8080/api/show/"+r.data);
+      setDisplay("https://url-shortener-server-h5gn.onrender.com/api/show/"+r.data);
     }
-    console.log("http://localhost:8080/api/show/"+r.data);
+    // console.log("https://url-shortener-server-h5gn.onrender.com/api/show/"+r.data);
   }
   function changeEvent(e)
   {

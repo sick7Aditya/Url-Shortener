@@ -1,14 +1,14 @@
 import axios from "axios";
 
 const Backend = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: "https://url-shortener-server-h5gn.onrender.com",
     withCredentials: true
 });
 
 export function PostMapping(url)
 {
     return Backend.post("/api/add",{
-        email : localStorage.getItem("email"),
+        // email : localStorage.getItem("email"),
         url : url
     });
 }
