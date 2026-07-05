@@ -70,8 +70,10 @@ public class UserService {
         }
         else {
             if (og.generateOTP(su)) {
+                log.info("The Otp has shared with the user.");
                 return true;
             } else {
+                log.info("Some Error occured not able to send the OTP..");
                 return false;
             }
         }
@@ -95,7 +97,7 @@ public class UserService {
                 UserModel u = new UserModel();
                 u.setEmail(o.getEmail());
                 u.setName(o.getName());
-                u.setPwd(passwordEncoder.encode(ov.getPwd()));
+                u.setPwd(passwordEncoder.encode(o.getPwd()));
                 u.setLimit(5);
                 urepo.save(u);
                 orepo.deleteByEmail(ov.getEmail());

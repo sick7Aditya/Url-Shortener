@@ -19,6 +19,7 @@ public class UrlModel {
     private String id;
 
     private String url;
+    @Indexed(unique = true)
     private String smallHashCode;
 
     @Indexed(expireAfter = "5h")

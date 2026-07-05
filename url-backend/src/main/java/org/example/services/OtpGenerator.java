@@ -2,7 +2,7 @@ package org.example.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.Signup;
-import org.example.email.MailService;
+import org.example.email.RealMailService;
 import org.example.models.OTPModel;
 import org.example.repo.OtpRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class OtpGenerator {
     private OtpRepo orepo;
 
     @Autowired
-    private MailService ms;
+    private RealMailService ms;
 
 
     public String returnOTP(String email)
@@ -42,7 +42,7 @@ public class OtpGenerator {
             o.setPwd(su.getPwd());
             o.setExpiresAt(new Date());
             orepo.save(o);
-            log.info("OTP saved in db :"+otp);
+            log.info("OTP saved in db");
             return true;
         }
         else

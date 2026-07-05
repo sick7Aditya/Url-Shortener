@@ -23,13 +23,14 @@ function Login() {
     console.log("Email:", email);
     console.log("Password:", pwd);
 
-    const r = await fetch(
-      "http://localhost:8080/api/Login",
-      {
-       method: "POST",
-       headers:{"Content-Type": "application/json"},
-       body: JSON.stringify({ email,pwd }),
-    });
+    const r = await fetch("http://localhost:8080/api/Login", {
+    method: "POST",
+    credentials: "include",  // credential - bohot lambi kahani hai.
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, pwd })
+});
 
     const data = await r.text();
     if(data === "what the heck mail doesnt exist?Sign Up First with this mail!")

@@ -31,9 +31,9 @@ public class UrlController {
     private UserService us;
     //  get the url  * checking the db whether it exist or not.
     @PostMapping("/add")
-    public String addUrl(@RequestBody UrlData ud)  // dto ki jagah map bhi use kr sakte , best approach dto he hai.:3
+    public String addUrl(@RequestBody UrlData ud , Authentication auth)  // dto ki jagah map bhi use kr sakte , best approach dto he hai.:3
     {
-        String s = u_service.saveUrl(ud);
+        String s = u_service.saveUrl(ud,auth.getName());
         if(s.startsWith("Success"))
         {
 //            return "ur small url :"+s.substring(7,s.length());  // for backend i return this
@@ -63,7 +63,9 @@ public class UrlController {
     @GetMapping("/allUrls")
     public List<UrlModel> providingUserAllUrls(Authentication auth)
     {
-        log.info("User is asking for thw url");
+        log.info("User is asking for the url");
+        log.info("Authentication = {}", auth);
+        log.info("Name = {}", auth == null ? "null" : auth.getName());
         return us.provideAllUserUrls(auth.getName());
     }
 }

@@ -9,6 +9,7 @@ import org.example.repo.UserModelRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Base64;
 
 @Service
@@ -27,11 +28,11 @@ public class UrlService {
 
 
     //    1. save url
-    public String saveUrl(UrlData ud)
+    public String saveUrl(UrlData ud,String email)
     {
-        if(user_r.existsByEmail(ud.getEmail()))
+        if(user_r.existsByEmail(email))
         {
-            UserModel um = user_r.findByEmail(ud.getEmail());
+            UserModel um = user_r.findByEmail(email);
             if(um.getLimit() == 0)
             {
                 log.info("Limit Reached hai user ki.5 sa zyade nhi kar sakte.");
@@ -47,10 +48,13 @@ public class UrlService {
                     um.getUserUrls().add(ur.getId());
                     user_r.save(um);
                     return ur.getSmallHashCode();
-                } else {
+                }
+                else {
                     log.info("New Pokemon(url) for the db :" + ud.getUrl());
-                    String hashCode = encode(ud.getUrl());    // smalling the url.
-
+                    String hashCode ;   // smalling the url.
+                    do {
+                        hashCode = encode(ud.getUrl());   //argument pass krne ka fyade nhi hai btw.
+                    } while (u_repo.existsBySmallHashCode(hashCode));
 
                     UrlModel ur = u_repo.save(new UrlModel(ud.getUrl(), hashCode));    // save krte samay ya record return krdete (danvir karan).
                                  // Storing the url.
@@ -89,6 +93,14 @@ public class UrlService {
     }
 
     public String encode(String url) {
-        return Base64.getUrlEncoder().encodeToString(url.getBytes());
-    }
+        String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        StringBuilder sb = new StringBuilder();
+        SecureRandom r = new SecureRandom();
+        for (int i = 0; i < 7; i++) {
+            sb.append(CHARACTERS.charAt(r.nextInt(CHARACTERS.length())));
+        }
+
+        return sb.toString();
+        }
 }

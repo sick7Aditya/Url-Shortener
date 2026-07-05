@@ -1,11 +1,10 @@
 package org.example.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.example.dto.LoginTimeDTO;
 import org.example.dto.OtpVerify;
 import org.example.dto.Signup;
-import org.example.email.MailService;
-import org.example.services.OtpGenerator;
 import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,20 +15,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class AuthController {
 
-    @Autowired
-    private MailService ms;
+
     @Autowired
     private UserService us;
-    @Autowired
-    private OtpGenerator op;
+
 
 
 //     for Login->check Password == db ka password :
@@ -39,12 +35,14 @@ public class AuthController {
         String s = us.Login(lt);
         if(s.equals("no_mail"))
         {
+            log.info("Mail doesnt exist of the user.");
             return "what the heck mail doesnt exist?Sign Up First with this mail!";
         }
         else {
             if(s.equals("Success"))
             {
-                // bhaynakar security -> creating an session because koi bhi non user saare url's dekh sakte db ke of any user(no protection) ,
+                // bhaynakar security code below-> creating an session because koi bhi non user saare url's dekh sakte db ke of any user(no protection)
+                // so maine /add ko authenticate kar diye .authenticate() sa spring security mai :3.
 
 //               storing user in a session (>,<)
                 Authentication auth = new UsernamePasswordAuthenticationToken(
@@ -58,9 +56,12 @@ public class AuthController {
                 req.getSession(true).setAttribute(
                         HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context
                 );
+//                log.info("Session ID after login: {}", req.getSession().getId());
+                log.info("New Session occured !!!");
                 return "gtg";
             }
             else {
+                log.info("Credential doesnt match from the db.");
                 return "wrong_pwd";
             }
         }
@@ -80,10 +81,12 @@ public class AuthController {
 //        ya upar jo bhi likha hai maine verification of otp ke time pa kare hai.
         if(us.ClickedSignUpButton(su))
         {
+            log.info("OTP gyi");
             return "Success";
         }
         else
         {
+            log.info("OTP rehgyi >.<_[]_");
             return "Fails";
         }
     }
@@ -94,9 +97,11 @@ public class AuthController {
     {
         if(us.verifyOTP(ov))
         {
+            log.info("gtg !! open the Login page.");
             return "success";
         }
         else {
+            log.info("OTP Verification mai mistake hogyi.");
             return "Fails";
         }
     }

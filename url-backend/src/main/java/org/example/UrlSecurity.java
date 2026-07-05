@@ -30,7 +30,8 @@ public class UrlSecurity {
                 .sessionManagement(session->session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/SignUp", "/api/Otp", "/api/Login", "/api/show/**").permitAll()
+                        .requestMatchers("/api/SignUp", "/api/Otp", "/api/Login", "/api/show/**" ).permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().authenticated()    // add krne waali kr di authenticated.
                 );
         return http.build();
@@ -44,6 +45,7 @@ public class UrlSecurity {
         cs.setAllowedMethods(List.of("GET","POST","DELETE","PUT","OPTIONS"));
         cs.setAllowedHeaders(List.of("*"));
         cs.setMaxAge(3600L);
+        cs.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource ccs = new UrlBasedCorsConfigurationSource();
         ccs.registerCorsConfiguration("/**",cs);

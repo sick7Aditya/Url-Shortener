@@ -76,6 +76,11 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+<!--Actuator -> so i dont have to create the Endpoints myself anymore. (delete krne ja rahe health_controller file :3)-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
